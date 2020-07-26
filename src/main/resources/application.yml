@@ -2,3 +2,10 @@ mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+
+flyway:
+  enabled: true
+  schemas: EmployeeHistory
+  locations: classpath:db/migration
+  baseline-on-migrate: true
