@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="life.wmm.commulity.community.mapper.UserMapper">
+    <!--    namespace要跟接口的全类名绑定起来-->
+<insert id="insert" parameterType="life.wmm.commulity.community.model.User">
+    insert into user(name,accountId,token,gmtCreat,gmtModified) values(#{name},#{accountId},#{token},#{gmtCreat},#{gmtModified})
+</insert>
+</mapper>

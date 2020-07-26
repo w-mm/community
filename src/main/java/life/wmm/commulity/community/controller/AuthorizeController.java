@@ -3,18 +3,27 @@ package life.wmm.commulity.community.controller;
 
 import life.wmm.commulity.community.dto.AccessTokenDTO;
 import life.wmm.commulity.community.dto.GithubUser;
+import life.wmm.commulity.community.mapper.UserMapper;
+import life.wmm.commulity.community.model.User;
 import life.wmm.commulity.community.provider.GithubProvider;
+import life.wmm.commulity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
+
 @Controller
 public class AuthorizeController {
 
     @Autowired
     private GithubProvider githubProvider;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;
@@ -27,7 +36,7 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name="code") String code,
-                           @RequestParam(name="state") String state)
+                           @RequestParam(name="state") String state, HttpServletRequest request)
     {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
@@ -37,7 +46,23 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
-        System.out.println(user.getName());
-        return "index";
+
+        if (user!=null){
+            //登陆成功写cookie和session
+            User user1 = new User();
+            user1.setToken(UUID.randomUUID().toString());
+            user1.setName(user.getName());
+            user1.setAccountId(String.valueOf(user.getId()));
+            user1.setGmtCreat(System.currentTimeMillis());
+            user1.setGmtModified(user1.getGmtCreat());
+            userService.insert(user1);
+            request.getSession().setAttribute("user",user);
+            return "redirect:/";
+        }else {
+            //登陆失败，重新登陆
+            return "redirect:/";
+        }
+
+
     }
 }
