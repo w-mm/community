@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="life.wmm.commulity.community.mapper.QuestionMapper">
+    <!--    namespace要跟接口的全类名绑定起来-->
+    <insert id="creat" parameterType="life.wmm.commulity.community.model.Question">
+        insert into question(title,description,gmt_creat,gmt_modified,creator,tag)
+                        values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})
+    </insert>
+
+
+</mapper>
