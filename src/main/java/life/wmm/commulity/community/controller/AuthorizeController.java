@@ -58,6 +58,10 @@ public class AuthorizeController {
             user1.setAccountId(String.valueOf(user.getId()));
             user1.setGmtCreat(System.currentTimeMillis());
             user1.setGmtModified(user1.getGmtCreat());
+            user1.setAvatarUrl(user.getAvatar_url());
+
+            System.out.println(user);
+
             userService.insert(user1);
             response.addCookie(new Cookie("token",token));
             //登陆成功写cookie和session

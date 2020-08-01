@@ -3,10 +3,14 @@
 <mapper namespace="life.wmm.commulity.community.mapper.UserMapper">
     <!--    namespace要跟接口的全类名绑定起来-->
     <insert id="insert" parameterType="life.wmm.commulity.community.model.User">
-        insert into user(name,account_id,token,gmt_create,gmt_modified) values(#{name},#{accountId},#{token},#{gmtCreat},#{gmtModified})
+        insert into user(name,account_id,token,gmt_create,gmt_modified,avatar_url) values(#{name},#{accountId},#{token},#{gmtCreat},#{gmtModified},#{avatar_url})
     </insert>
 
     <select id="findByToken" resultType="life.wmm.commulity.community.model.User">
         select * from user where token=#{token};
+    </select>
+
+    <select id="findById" resultType="life.wmm.commulity.community.model.User" >
+        select * from user where id=#{id}
     </select>
 </mapper>
