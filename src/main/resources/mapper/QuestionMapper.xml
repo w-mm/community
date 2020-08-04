@@ -3,12 +3,23 @@
 <mapper namespace="life.wmm.commulity.community.mapper.QuestionMapper">
     <!--    namespace要跟接口的全类名绑定起来-->
     <insert id="creat" parameterType="life.wmm.commulity.community.model.Question">
-        insert into question(title,description,gmt_creat,gmt_modified,creator,tag)
+        insert into question(title,description,gmt_create,gmt_modified,creator,tag)
                         values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})
     </insert>
 
     <select id="list" resultType="life.wmm.commulity.community.model.Question">
-        select * from question;
+        select * from question limit #{offset},#{size};
     </select>
 
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from question;
+    </select>
+
+    <select id="listByUserId" resultType="life.wmm.commulity.community.model.Question">
+        select * from question where creator=#{userId} limit #{offset},#{size};
+    </select>
+
+    <select id="countByUserId" resultType="java.lang.Integer">
+        select count(1) from question where creator=#{userId};
+    </select>
 </mapper>

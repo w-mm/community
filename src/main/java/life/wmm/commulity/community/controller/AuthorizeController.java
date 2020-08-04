@@ -56,11 +56,11 @@ public class AuthorizeController {
             user1.setToken(token);
             user1.setName(user.getName());
             user1.setAccountId(String.valueOf(user.getId()));
-            user1.setGmtCreat(System.currentTimeMillis());
-            user1.setGmtModified(user1.getGmtCreat());
+            user1.setGmtCreate(System.currentTimeMillis());
+            user1.setGmtModified(user1.getGmtCreate());
             user1.setAvatarUrl(user.getAvatar_url());
 
-            System.out.println(user);
+//            System.out.println(user);
 
             userService.insert(user1);
             response.addCookie(new Cookie("token",token));

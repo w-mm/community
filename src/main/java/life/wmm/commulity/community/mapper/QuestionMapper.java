@@ -8,6 +8,11 @@ import java.util.List;
 @Mapper
 public interface QuestionMapper {
 
-    public void creat(Question question);
-    List<Question> list();
+    void creat(Question question);
+    List<Question> list(Integer offset, Integer size);
+    Integer count();
+
+    List<Question> listByUserId(Integer userId, Integer offset, Integer size);
+
+    Integer countByUserId(Integer userId);
 }
