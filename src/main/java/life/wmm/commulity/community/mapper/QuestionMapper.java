@@ -9,7 +9,9 @@ import java.util.List;
 public interface QuestionMapper {
 
     void creat(Question question);
+
     List<Question> list(Integer offset, Integer size);
+
     Integer count();
 
     List<Question> listByUserId(Integer userId, Integer offset, Integer size);

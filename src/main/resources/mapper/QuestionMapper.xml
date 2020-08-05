@@ -4,7 +4,7 @@
     <!--    namespace要跟接口的全类名绑定起来-->
     <insert id="creat" parameterType="life.wmm.commulity.community.model.Question">
         insert into question(title,description,gmt_create,gmt_modified,creator,tag)
-                        values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})
+        values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})
     </insert>
 
     <select id="list" resultType="life.wmm.commulity.community.model.Question">

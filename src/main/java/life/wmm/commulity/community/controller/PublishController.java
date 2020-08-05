@@ -24,7 +24,7 @@ public class PublishController {
     UserService userService;
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish() {
         return "publish";
     }
 
@@ -35,21 +35,21 @@ public class PublishController {
             @RequestParam("tag") String tag,
             HttpServletRequest request,
             Model model
-    ){
+    ) {
 
-        model.addAttribute("title",title);
-        model.addAttribute("description",description);
-        model.addAttribute("tag",tag);
+        model.addAttribute("title", title);
+        model.addAttribute("description", description);
+        model.addAttribute("tag", tag);
 
-        if (title==null || title==""){
-            model.addAttribute("error","标题不能未空");
+        if (title == null || title == "") {
+            model.addAttribute("error", "标题不能未空");
             return "publish";
         }
 
-        User user=(User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
 
-        if (user==null){
-            model.addAttribute("error","用户未登陆");
+        if (user == null) {
+            model.addAttribute("error", "用户未登陆");
             return "publish";
         }
 

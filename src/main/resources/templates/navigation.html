@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}">
     <link rel="stylesheet" href="../static/css/community.css" th:href="@{/css/community.css}">
-    <script  src="../static/js/jquery-3.4.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script src="../static/js/jquery-3.4.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script type="text/javascript" src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 
 </head>
@@ -15,7 +15,8 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Wmm-社区</span>
                 </button>
                 <a class="navbar-brand" href="/">Wmm-社区</a>
@@ -35,7 +36,8 @@
                     </li>
                     <li class="dropdown" th:if="${session.user} ne null">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><span th:text="${session.user.getName()}"></span> <span class="caret"></span>
+                           aria-haspopup="true" aria-expanded="false"><span th:text="${session.user.getName()}"></span>
+                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/profile/question">我的问题</a></li>
@@ -43,7 +45,7 @@
                             <li><a href="#">退出登陆</a></li>
                         </ul>
                     </li>
-                    <li th:if= " ${session.user ==null}">
+                    <li th:if=" ${session.user ==null}">
                         <a href="https://github.com/login/oauth/authorize?client_id=06034f12e9ab74d4bca2&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登陆</a>
                     </li>
 
