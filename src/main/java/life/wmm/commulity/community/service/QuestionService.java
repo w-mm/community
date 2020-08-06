@@ -1,6 +1,7 @@
 package life.wmm.commulity.community.service;
 
 import life.wmm.commulity.community.dto.PaginationDTO;
+import life.wmm.commulity.community.dto.QuestionDTO;
 import life.wmm.commulity.community.model.Question;
 
 public interface QuestionService {
@@ -9,4 +10,8 @@ public interface QuestionService {
     PaginationDTO list(Integer page, Integer size);
 
     PaginationDTO list(Integer id, Integer page, Integer size);
+
+    QuestionDTO getById(Integer id);
+
+    void createOrUpdate(Question question);
 }

@@ -22,4 +22,12 @@
     <select id="countByUserId" resultType="java.lang.Integer">
         select count(1) from question where creator=#{userId};
     </select>
+
+    <select id="getById" resultType="life.wmm.commulity.community.model.Question">
+        select * from question where id=#{id} ;
+    </select>
+
+    <update id="update" parameterType="life.wmm.commulity.community.model.Question">
+        update question set title=#{title},description=#{description},gmt_modified=#{gmtModified},tag=#{tag} where id=#{id}
+    </update>
 </mapper>

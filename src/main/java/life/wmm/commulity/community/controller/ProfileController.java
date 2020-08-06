@@ -2,6 +2,7 @@ package life.wmm.commulity.community.controller;
 
 
 import life.wmm.commulity.community.dto.PaginationDTO;
+import life.wmm.commulity.community.mapper.QuestionMapper;
 import life.wmm.commulity.community.model.User;
 import life.wmm.commulity.community.service.QuestionService;
 import life.wmm.commulity.community.service.UserService;
@@ -23,6 +24,8 @@ public class ProfileController {
 
     @Autowired
     QuestionService questionService;
+
+
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action, Model model, HttpServletRequest request

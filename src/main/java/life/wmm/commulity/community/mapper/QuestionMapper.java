@@ -1,5 +1,6 @@
 package life.wmm.commulity.community.mapper;
 
+import life.wmm.commulity.community.dto.QuestionDTO;
 import life.wmm.commulity.community.model.Question;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,4 +18,9 @@ public interface QuestionMapper {
     List<Question> listByUserId(Integer userId, Integer offset, Integer size);
 
     Integer countByUserId(Integer userId);
+
+
+    Question getById(Integer id);
+
+    void update(Question question);
 }

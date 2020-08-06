@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -55,13 +56,13 @@ public class AuthorizeController {
             user1.setToken(token);
             user1.setName(user.getName());
             user1.setAccountId(String.valueOf(user.getId()));
-            user1.setGmtCreate(System.currentTimeMillis());
-            user1.setGmtModified(user1.getGmtCreate());
             user1.setAvatarUrl(user.getAvatar_url());
 
 //            System.out.println(user);
 
-            userService.insert(user1);
+//            userService.insert(user1);
+
+            userService.createOrUpdate(user1);
             response.addCookie(new Cookie("token", token));
             //登陆成功写cookie和session
 //
@@ -72,5 +73,13 @@ public class AuthorizeController {
         }
 
 
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

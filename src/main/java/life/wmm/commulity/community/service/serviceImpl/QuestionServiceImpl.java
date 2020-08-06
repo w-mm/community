@@ -23,6 +23,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     UserMapper userMapper;
 
+
+
     @Override
     public void creat(Question question) {
         questionMapper.creat(question);
@@ -47,7 +49,8 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questionList) {
-            User user = userMapper.findById(question.getId());
+            User user = userMapper.findById(question.getCreator());
+//            System.out.println("-------------------");
 //            System.out.println(user);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
@@ -92,5 +95,30 @@ public class QuestionServiceImpl implements QuestionService {
         System.out.println(paginationDTO.getQuestions());
         System.out.println(paginationDTO);
         return paginationDTO;
+    }
+
+    @Override
+    public QuestionDTO getById(Integer id) {
+        Question question = questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question, questionDTO);
+        User user = userMapper.findById(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
+
+    @Override
+    public void createOrUpdate(Question question) {
+        if (question.getId()==null){
+            //创建
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.creat(question);
+        }else {
+            //更新
+            question.setGmtModified(System.currentTimeMillis());
+            System.out.println(question);
+            questionMapper.update(question);
+        }
     }
 }

@@ -14,4 +14,12 @@
     <select id="findById" resultType="life.wmm.commulity.community.model.User">
         select * from user where id=#{id}
     </select>
+
+    <select id="findByAccountId" resultType="life.wmm.commulity.community.model.User">
+        select * from user where account_id=#{accountId}
+    </select>
+
+    <update id="update" parameterType="life.wmm.commulity.community.model.User">
+        update user set name =#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl} where id=#{id}
+    </update>
 </mapper>
