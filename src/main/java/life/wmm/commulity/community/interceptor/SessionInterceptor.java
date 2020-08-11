@@ -1,7 +1,9 @@
 package life.wmm.commulity.community.interceptor;
 
 
+import life.wmm.commulity.community.mapper.UserMapper;
 import life.wmm.commulity.community.model.User;
+import life.wmm.commulity.community.model.UserExample;
 import life.wmm.commulity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 /**
@@ -22,6 +25,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -31,12 +36,14 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    User user = userService.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if (users.size() != 0) {
+                       request.getSession().setAttribute("user",users.get(0));
                     }
                     break;
-
                 }
             }
         }
