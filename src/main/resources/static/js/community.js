@@ -12,7 +12,8 @@ function post() {
 }
 
 function comment2target(targetId, type, content) {
-    if (!content) {
+
+    if (content==null || content=="") {
         alert("不能回复空内容~~~");
         return;
     }
