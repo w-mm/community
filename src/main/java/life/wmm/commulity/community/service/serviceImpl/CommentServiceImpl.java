@@ -3,12 +3,11 @@ package life.wmm.commulity.community.service.serviceImpl;
 
 import life.wmm.commulity.community.dto.CommentDTO;
 import life.wmm.commulity.community.enums.CommentTypeEnum;
+import life.wmm.commulity.community.enums.NotificationStatusEnum;
+import life.wmm.commulity.community.enums.NotificationTypeEnum;
 import life.wmm.commulity.community.exception.CustomizeErrorCode;
 import life.wmm.commulity.community.exception.CustomizeException;
-import life.wmm.commulity.community.mapper.CommentMapper;
-import life.wmm.commulity.community.mapper.QuestionExtMapper;
-import life.wmm.commulity.community.mapper.QuestionMapper;
-import life.wmm.commulity.community.mapper.UserMapper;
+import life.wmm.commulity.community.mapper.*;
 import life.wmm.commulity.community.model.*;
 import life.wmm.commulity.community.service.CommentService;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +28,9 @@ public class CommentServiceImpl implements CommentService {
     CommentMapper commentMapper;
 
     @Autowired
+    CommentExtMapper commentExtMapper;
+
+    @Autowired
     QuestionMapper questionMapper;
 
     @Autowired
@@ -37,13 +39,18 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    NotificationMapper notificationMapper;
+
+
     @Override
     @Transactional
-    public void insert(Comment comment) {
-        if (comment.getParentId()==null || comment.getParentId()==0){
+    public void insert(Comment comment, User commentator) {
+
+        if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
-        if (comment.getType()==null || CommentTypeEnum.isExist(comment.getType())){
+        if (comment.getType() == null) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
         if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
@@ -53,8 +60,22 @@ public class CommentServiceImpl implements CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
 
+            // 回复问题
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+
             commentMapper.insert(comment);
-       }else {
+
+            // 增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
+            //创建通知
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+        }else {
             // 回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question==null){
@@ -63,16 +84,33 @@ public class CommentServiceImpl implements CommentService {
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
+            //创建通知
+            createNotify(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
         }
 
     }
 
+
+
+    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationType.getType());
+        notification.setOuterid(outerId);
+        notification.setNotifier(comment.getCommentator());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insert(notification);
+    }
+
     @Override
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
         commentExample.setOrderByClause("gmt_create desc");
         java.util.List<Comment> comments = commentMapper.selectByExample(commentExample);
         if (comments.size() == 0){

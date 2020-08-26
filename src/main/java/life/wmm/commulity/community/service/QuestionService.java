@@ -4,6 +4,8 @@ import life.wmm.commulity.community.dto.PaginationDTO;
 import life.wmm.commulity.community.dto.QuestionDTO;
 import life.wmm.commulity.community.model.Question;
 
+import java.util.List;
+
 public interface QuestionService {
     public void creat(Question question);
 
@@ -16,4 +18,6 @@ public interface QuestionService {
     void createOrUpdate(Question question);
 
     void incView(Long id);
+
+    List<QuestionDTO> selectRelated(QuestionDTO questionDTO);
 }

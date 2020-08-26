@@ -3,7 +3,9 @@ package life.wmm.commulity.community.controller;
 
 
 import life.wmm.commulity.community.dto.CommentCreateDTO;
+import life.wmm.commulity.community.dto.CommentDTO;
 import life.wmm.commulity.community.dto.ResultDTO;
+import life.wmm.commulity.community.enums.CommentTypeEnum;
 import life.wmm.commulity.community.exception.CustomizeErrorCode;
 import life.wmm.commulity.community.mapper.CommentMapper;
 import life.wmm.commulity.community.model.Comment;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -32,6 +35,7 @@ public class CommentController {
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody CommentCreateDTO commentDTO, HttpServletRequest request
                        ) {
+
         User user = (User) request.getSession().getAttribute("user");
         if (user==null){
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
@@ -49,7 +53,14 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(5L);
         comment.setLikeCount(0L);
-        commentService.insert(comment);
+
+        commentService.insert(comment,user);
         return ResultDTO.okOf();
+    }
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }

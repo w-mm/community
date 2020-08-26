@@ -12,7 +12,6 @@ function post() {
 }
 
 function comment2target(targetId, type, content) {
-
     if (content==null || content=="") {
         alert("不能回复空内容~~~");
         return;
@@ -67,16 +66,22 @@ function collapseComments(e) {
         e.removeAttribute("data-collapse");
         e.classList.remove("active");
     } else {
+        // comments.addClass("in");
+        // e.setAttribute("data-collapse", "in");
+        // e.classList.add("active");
         var subCommentContainer = $("#comment-" + id);
+
         if (subCommentContainer.children().length != 1) {
             //展开二级评论
             comments.addClass("in");
             // 标记二级评论展开状态
             e.setAttribute("data-collapse", "in");
             e.classList.add("active");
-        } else {
+        }
+        else {
             $.getJSON("/comment/" + id, function (data) {
-                $.each(data.data.reverse(), function (index, comment) {
+                // $.each(data.data.reverse(), function (index, comment) {
+                $.each(data.data, function (index, comment) {
                     var mediaLeftElement = $("<div/>", {
                         "class": "media-left"
                     }).append($("<img/>", {
