@@ -4,6 +4,7 @@ package life.wmm.commulity.community.interceptor;
 import life.wmm.commulity.community.mapper.UserMapper;
 import life.wmm.commulity.community.model.User;
 import life.wmm.commulity.community.model.UserExample;
+import life.wmm.commulity.community.service.NotificationService;
 import life.wmm.commulity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,9 +26,12 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     UserService userService;
+
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    private NotificationService notificationService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -42,6 +46,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                        request.getSession().setAttribute("user",users.get(0));
+                        Long unreadCount=notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadCount",unreadCount);
                     }
                     break;
                 }

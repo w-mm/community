@@ -3,7 +3,6 @@ package life.wmm.commulity.community.controller;
 
 import life.wmm.commulity.community.dto.AccessTokenDTO;
 import life.wmm.commulity.community.dto.GithubUser;
-import life.wmm.commulity.community.mapper.UserMapper;
 import life.wmm.commulity.community.model.User;
 import life.wmm.commulity.community.provider.GithubProvider;
 import life.wmm.commulity.community.service.UserService;

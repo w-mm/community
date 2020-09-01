@@ -9,7 +9,7 @@ import java.util.List;
 public interface QuestionService {
     public void creat(Question question);
 
-    PaginationDTO list(Integer page, Integer size);
+    PaginationDTO list(String search,Integer page, Integer size);
 
     PaginationDTO list(Long id, Integer page, Integer size);
 

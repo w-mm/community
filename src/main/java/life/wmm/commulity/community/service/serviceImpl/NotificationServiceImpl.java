@@ -40,21 +40,17 @@ public class NotificationServiceImpl implements NotificationService {
         notificationExample.createCriteria()
                 .andReceiverEqualTo(userId);
         Integer totalCount = (int) notificationMapper.countByExample(notificationExample);
-
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
+       
+        paginationDTO.setPagination(totalCount, page, size);
 
         if (page < 1) {
             page = 1;
         }
-        if (page > totalPage) {
-            page = totalPage;
+        if (page > paginationDTO.getTotalPage()) {
+            page = paginationDTO.getTotalPage();
         }
 
-        paginationDTO.setPagination(totalPage, page,size);
+
 
         //size*(page-1)
         Integer offset = size * (page - 1);

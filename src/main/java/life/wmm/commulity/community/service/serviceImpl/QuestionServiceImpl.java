@@ -1,5 +1,6 @@
 package life.wmm.commulity.community.service.serviceImpl;
 
+import life.wmm.commulity.community.dto.QuestionQueryDTO;
 import life.wmm.commulity.community.dto.PaginationDTO;
 import life.wmm.commulity.community.dto.QuestionDTO;
 import life.wmm.commulity.community.exception.CustomizeErrorCode;
@@ -18,11 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import javax.sql.rowset.Joinable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,10 +43,19 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search,Integer page, Integer size) {
+
+        if(StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search, " ");
+            search= Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
+
         PaginationDTO paginationDTO = new PaginationDTO();
         //总数
-        Integer totalCount =(int) questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 //        System.out.println(totalCount);
         paginationDTO.setPagination(totalCount, page, size);
         if (page < 1) {
@@ -60,7 +68,9 @@ public class QuestionServiceImpl implements QuestionService {
         Integer offset = size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
@@ -99,6 +109,7 @@ public class QuestionServiceImpl implements QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
                 .andCreatorEqualTo(userId);
+        example.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         
         List<QuestionDTO> questionDTOList = new ArrayList<>();
