@@ -6,6 +6,7 @@ import life.wmm.commulity.community.dto.GithubUser;
 import life.wmm.commulity.community.model.User;
 import life.wmm.commulity.community.provider.GithubProvider;
 import life.wmm.commulity.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -57,9 +59,7 @@ public class AuthorizeController {
             user1.setAccountId(String.valueOf(user.getId()));
             user1.setAvatarUrl(user.getAvatar_url());
 
-//            System.out.println(user);
 
-//            userService.insert(user1);
 
             userService.createOrUpdate(user1);
             response.addCookie(new Cookie("token", token));
@@ -67,6 +67,7 @@ public class AuthorizeController {
 //
             return "redirect:/";
         } else {
+            log.error("callback get github error,{}", user);
             //登陆失败，重新登陆
             return "redirect:/";
         }
