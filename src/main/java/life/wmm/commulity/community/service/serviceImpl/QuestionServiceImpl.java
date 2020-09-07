@@ -65,7 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
             page = paginationDTO.getTotalPage();
         }
         //每页开始的第一条数据下标 size*(page-1)
-        Integer offset = size * (page - 1);
+        Integer offset = page < 1 ? 0 : size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
         questionQueryDTO.setSize(size);
